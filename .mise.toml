@@ -2,6 +2,7 @@
 # IaC tools pinned to major versions to avoid breaking changes.
 # Utility tools use "latest" to keep templates current.
 [tools]
+cocogitto = "6"
 go = "1.23"
 golangci-lint = "1.62"
 opentofu = "1.9"
