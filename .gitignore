@@ -24,9 +24,6 @@ override.tf.json
 .DS_Store
 Thumbs.db
 
-# Node (commitlint)
-node_modules/
-package-lock.json
 
 # Go
 vendor/
