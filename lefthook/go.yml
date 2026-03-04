@@ -2,22 +2,22 @@ pre-commit:
   commands:
     mod-tidy:
       glob: "**/*.go"
-      run: cd test && go mod tidy && git diff --exit-code go.mod go.sum
+      run: task lint:go:mod-tidy
       fail_text: "go mod tidy made changes"
 
     fmt:
       glob: "**/*.go"
-      run: cd test && gofmt -l . && test -z "$(gofmt -l .)"
+      run: task lint:go:fmt
       fail_text: "gofmt found unformatted files"
 
     vet:
       glob: "**/*.go"
-      run: cd test && go vet ./...
+      run: task lint:go:vet
       fail_text: "go vet found issues"
 
     lint:
       glob: "**/*.go"
-      run: (test -f custom-gcl || golangci-lint custom) && cd test && ../custom-gcl run --new-from-rev=HEAD ./...
+      run: task lint:go:new
       fail_text: "golangci-lint found issues"
 
     file-length:
@@ -41,20 +41,20 @@ pre-commit:
 
     security:
       glob: "**/*.go"
-      run: cd test && gosec -quiet ./...
+      run: task lint:go:security
       fail_text: "gosec found security issues"
 
     test:
       glob: "**/*.go"
-      run: cd test && go test -short ./...
+      run: task lint:go:test
       fail_text: "tests failed"
 
 pre-push:
   commands:
     full-lint:
-      run: (test -f custom-gcl || golangci-lint custom) && cd test && ../custom-gcl run ./...
+      run: task lint:go
       fail_text: "full lint failed"
 
     vulncheck:
-      run: cd test && govulncheck ./...
+      run: task lint:go:vulncheck
       fail_text: "known vulnerabilities found"

@@ -17,6 +17,16 @@ tasks:
     cmds:
       - markdownlint-cli2 "**/*.md"
 
+  gitleaks:
+    desc: Scan staged changes for secrets
+    cmds:
+      - gitleaks protect --staged --verbose
+
+  gitleaks-full:
+    desc: Scan full repository for secrets
+    cmds:
+      - gitleaks detect --verbose
+
   go:build:
     desc: Build custom golangci-lint with plugins
     cmds:
@@ -30,8 +40,52 @@ tasks:
     cmds:
       - test -f test/go.mod || exit 0 && cd test && ../custom-gcl run ./...
 
+  go:new:
+    desc: Run golangci-lint on new changes only
+    deps: [go:build]
+    cmds:
+      - test -f test/go.mod || exit 0 && cd test && ../custom-gcl run --new-from-rev=HEAD ./...
+
   go:fix:
     desc: Run golangci-lint with auto-fix
     deps: [go:build]
     cmds:
       - test -f test/go.mod || exit 0 && cd test && ../custom-gcl run --fix ./...
+
+  go:mod-tidy:
+    desc: Check go.mod is tidy
+    dir: test
+    cmds:
+      - go mod tidy
+      - git diff --exit-code go.mod go.sum
+
+  go:fmt:
+    desc: Check Go formatting
+    dir: test
+    cmds:
+      - gofmt -l .
+      - test -z "$(gofmt -l .)"
+
+  go:vet:
+    desc: Run go vet
+    dir: test
+    cmds:
+      - go vet ./...
+
+  go:security:
+    desc: Run gosec security scanner
+    dir: test
+    cmds:
+      - gosec -quiet ./...
+
+  go:test:
+    desc: Run short Go tests
+    dir: test
+    cmds:
+      - go test -short ./...
+
+  go:vulncheck:
+    desc: Check for known vulnerabilities
+    dir: test
+    cmds:
+      - govulncheck ./...
