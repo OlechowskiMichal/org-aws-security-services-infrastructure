@@ -1,4 +1,7 @@
 # Development profile — additional tools for local work
+[settings]
+experimental = true
+
 [tools]
 lefthook = "1.13"
 "go:golang.org/x/vuln/cmd/govulncheck" = "latest"
@@ -6,3 +9,6 @@ lefthook = "1.13"
 gitleaks = "latest"
 yq = "latest"
 awscli = "latest"
+
+[hooks]
+enter = "lefthook install"
